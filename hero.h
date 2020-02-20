@@ -5,33 +5,60 @@ using namespace std;
 
 class Hero {
 	private:
-		int location_x, location_y;
+		int default_speed, speed, max_health, health;
+		bool dead;
 	public:
 		// Constructors:
-		Hero();
-
+		Hero(int set_speed, int set_health);	
 		// Accessors:
-		int get_location_x();
-		int get_location_y();
-
+		int get_speed();
+		int get_dspeed();
+		int get_health();
+		int get_mhealth();
+		bool is_dead();
 		// Mutators:
-		void set_location(int x, int y);
+		void adjust_health(int x);
+		void adjust_speed(int x);
 };
 
-Hero::Hero() {
-	location_x = 50;
-	location_y = 50;
+// Implementations:
+Hero::Hero(int set_speed, int set_health) {
+	speed = set_speed;
+	default_speed = set_speed;
+	health = set_health;
+	max_health = set_health;
+	dead = false;
 }
 
-int Hero::get_location_x() {
-	return location_x;
+int Hero::get_speed() {
+	return speed;
 }
 
-int Hero::get_location_y() {
-	return location_y;
+int Hero::get_dspeed() {
+	return default_speed;
 }
 
-void Hero::set_location(int x, int y) {
-	location_x = x;
-	location_y = y;
+int Hero::get_health() {
+	return health;
+}
+
+int Hero::get_mhealth() {
+	return max_health;
+}
+
+bool Hero::is_dead() {
+	return dead;
+}
+
+void Hero::adjust_health(int x) {
+	health += x;
+	if (health <= 0) {
+		health = 0;
+		dead = true;
+	}
+}
+
+void Hero::adjust_speed(int x) {
+	speed += x;
+	if (speed < 0) speed = 0;
 }

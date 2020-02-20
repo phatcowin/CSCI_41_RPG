@@ -1,4 +1,5 @@
 #include "map.h"
+#include "party.h"
 #include <unistd.h>
 
 const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
@@ -22,9 +23,15 @@ void turn_on_ncurses() {
 	timeout(TIMEOUT); //Set a max delay for key entry
 }
 
+void start_battle(Party *party) {
+	clear();
+	cout << "BATTLE BATTLE BATTLE";
+}
+
 int main() {
 	turn_on_ncurses();
 	Map map;
+	Party party;
 	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
@@ -53,11 +60,18 @@ int main() {
 			; //Do nothing
 		}
 
-		map.move_hero(x, y);		
+		if (map.check_tile(x, y) == '$') {
+			party.grab_treasure();
+
+		}
+		else if (map.check_tile(x, y) == 'M') start_battle(&party);
+		
+		map.move_party(x, y, &party);		
 
 		clear();
 		map.draw(x,y);
-		mvprintw(11,11,"X: %i Y: %i\n",x,y);
+		//mvprintw(11,11,"X: %i Y: %i\n",x,y);
+		mvprintw(12,0,"TREASURE: %i/%i",party.get_wallet(),map.treasure_count());
 		refresh();
 		usleep(5000);
 	}

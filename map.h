@@ -4,13 +4,13 @@
 #include <iostream>
 #include <random>
 #include <ncurses.h>
-#include "hero.h"
+#include "party.h"
 using namespace std; //Boo hiss
 
 class Map {
 	vector<vector<char>> map;
 	default_random_engine gen;
-	Hero hero;
+	int total_treasure;
 	public:
 	static const char HERO     = 'H';
 	static const char MONSTER  = 'M';
@@ -21,12 +21,15 @@ class Map {
 	static const size_t SIZE = 100; //World is a 100x100 map
 	static const size_t DISPLAY = 10; //Show a 10x10 area at a time
 	bool obstacle_check();
-	void move_hero();
+	void move_party();
+	char check_tile();
+	int treasure_count() { return total_treasure; }
 	//Randomly generate map
 	void init_map() {
 		uniform_int_distribution<int> d100(1,100);
 		map.clear();
 		map.resize(SIZE); //100 rows tall
+		total_treasure = 0;
 		for (auto &v : map) v.resize(SIZE,'.'); //100 columns wide
 		for (size_t i = 0; i < SIZE; i++) {
 			for (size_t j = 0; j < SIZE; j++) {
@@ -42,6 +45,7 @@ class Map {
 					}
 					else if (d100(gen) <= 3) {
 						map.at(i).at(j) = TREASURE;
+						total_treasure++;
 					}
 					else if (d100(gen) <= 10) { //10% each spot is wall
 						map.at(i).at(j) = WALL;
@@ -110,10 +114,13 @@ class Map {
 		if (map.at(y).at(x) == WATER || map.at(y).at(x) == WALL) return true;
 		else return false;
 	}
-	void move_hero(int x, int y) {
-		map.at(hero.get_location_y()).at(hero.get_location_x()) = OPEN;
-		hero.set_location(x, y);
-		map.at(hero.get_location_y()).at(hero.get_location_x()) = HERO;
+	void move_party(int x, int y, Party *party) {
+		map.at(party->get_location_y()).at(party->get_location_x()) = OPEN;
+		party->set_location(x, y);
+		map.at(party->get_location_y()).at(party->get_location_x()) = HERO;
+	}
+	char check_tile(int x, int y) {
+		return map.at(y).at(x);
 	}
 	Map() {
 		init_map();
