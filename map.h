@@ -10,6 +10,7 @@ using namespace std; //Boo hiss
 class Map {
 	vector<vector<char>> map;
 	default_random_engine gen;
+	Hero hero;
 	public:
 	static const char HERO     = 'H';
 	static const char MONSTER  = 'M';
@@ -32,10 +33,9 @@ class Map {
 				//Line the map with walls
 				if (i == 0 or j == 0 or i == SIZE-1 or j == SIZE-1) 
 					map.at(i).at(j) = WALL;
-				else if (i == SIZE/2 and j == SIZE/2) 
+				else if (i == SIZE/2 and j == SIZE/2) { 
 					map.at(i).at(j) = HERO;
-					Hero hero(i, j);
-				else {
+				} else {
 					//5% chance of monster
 					if (d100(gen) <= 5) {
 						map.at(i).at(j) = MONSTER;
@@ -106,12 +106,14 @@ class Map {
 			}
 		}
 	}
-	bool obstacle_check(int y, int x) {
-		if (map.at(x).at(y) == WATER || map.at(x).at(y) == WALL) return true;
+	bool obstacle_check(int x, int y) {
+		if (map.at(y).at(x) == WATER || map.at(y).at(x) == WALL) return true;
 		else return false;
 	}
 	void move_hero(int x, int y) {
-		
+		map.at(hero.get_location_y()).at(hero.get_location_x()) = OPEN;
+		hero.set_location(x, y);
+		map.at(hero.get_location_y()).at(hero.get_location_x()) = HERO;
 	}
 	Map() {
 		init_map();

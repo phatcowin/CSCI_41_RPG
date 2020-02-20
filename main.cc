@@ -32,12 +32,13 @@ int main() {
 		else if (ch == RIGHT) {
 			if (map.obstacle_check(x+1, y) == false) {
 				x++;
-				map.move_hero(x, y);
 			}
 			if (y >= Map::SIZE) y = Map::SIZE - 1; //Clamp value
 		}
 		else if (ch == LEFT) {
-			if (map.obstacle_check(x-1, y) == false) x--;
+			if (map.obstacle_check(x-1, y) == false) {
+				x--;
+			}
 			if (y < 0) y = 0;
 		}
 		else if (ch == UP) {
@@ -52,7 +53,7 @@ int main() {
 			; //Do nothing
 		}
 
-		
+		map.move_hero(x, y);		
 
 		clear();
 		map.draw(x,y);
