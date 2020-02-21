@@ -1,5 +1,6 @@
 #include "map.h"
 #include "party.h"
+#include "monster.h"
 #include <unistd.h>
 
 const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
@@ -25,7 +26,8 @@ void turn_on_ncurses() {
 
 void start_battle(Party *party) {
 	clear();
-	cout << "BATTLE BATTLE BATTLE";
+	party->monster_slain();
+	
 }
 
 int main() {
@@ -71,7 +73,10 @@ int main() {
 		clear();
 		map.draw(x,y);
 		//mvprintw(11,11,"X: %i Y: %i\n",x,y);
-		mvprintw(12,0,"TREASURE: %i/%i",party.get_wallet(),map.treasure_count());
+		mvprintw(0,12,"TREASURE: %i/%i",party.get_wallet(),map.treasure_count());
+		mvprintw(1,12,"KILLS: %i",party.get_kills());
+		mvprintw(2,12,"DAN'S HEALTH: %i/%i",party.get_health(0),party.get_mhealth(0));
+		mvprintw(3,12,"JERRY'S HEALTH: %i/%i",party.get_health(1),party.get_mhealth(0));
 		refresh();
 		usleep(5000);
 	}

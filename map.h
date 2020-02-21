@@ -18,6 +18,7 @@ class Map {
 	static const char WATER    = '~';
 	static const char OPEN     = '.';
 	static const char TREASURE = '$';
+	static const char GOAL     = 'G';
 	static const size_t SIZE = 100; //World is a 100x100 map
 	static const size_t DISPLAY = 10; //Show a 10x10 area at a time
 	bool obstacle_check();

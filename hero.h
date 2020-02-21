@@ -7,26 +7,29 @@ class Hero {
 	private:
 		int default_speed, speed, max_health, health;
 		bool dead;
+		string h_name;
 	public:
 		// Constructors:
-		Hero(int set_speed, int set_health);	
+		Hero(int set_speed, int set_health, string set_name);	
 		// Accessors:
 		int get_speed();
 		int get_dspeed();
 		int get_health();
 		int get_mhealth();
 		bool is_dead();
+		string get_name();
 		// Mutators:
 		void adjust_health(int x);
 		void adjust_speed(int x);
 };
 
 // Implementations:
-Hero::Hero(int set_speed, int set_health) {
+Hero::Hero(int set_speed, int set_health, string set_name) {
 	speed = set_speed;
 	default_speed = set_speed;
 	health = set_health;
 	max_health = set_health;
+	h_name = set_name;
 	dead = false;
 }
 
@@ -48,6 +51,10 @@ int Hero::get_mhealth() {
 
 bool Hero::is_dead() {
 	return dead;
+}
+
+string Hero::get_name() {
+	return h_name;
 }
 
 void Hero::adjust_health(int x) {
