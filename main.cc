@@ -2,12 +2,19 @@
 #include "party.h"
 #include "monster.h"
 #include <unistd.h>
+#include <time.h>
 
 const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
 const int UP = 65; //Key code for up arrow
 const int DOWN = 66;
 const int LEFT = 68;
 const int RIGHT = 67;
+
+struct LL {
+	string char_name;
+	LL *next;
+	LL(string new_cname, LL *new_next) { char_name = new_cname, next = new_next; }
+};
 
 void turn_on_ncurses() {
 	initscr();//Start curses mode
@@ -25,9 +32,53 @@ void turn_on_ncurses() {
 }
 
 void start_battle(Party *party) {
-	clear();
-	party->monster_slain();
-	
+	Monster monster;
+	int attack_value, target, turn_count(0);
+	LL *head = nullptr;
+	if (monster.get_speed() <= 4) { // make it linked
+		LL *temp1 = new LL(monster.get_name(), head);
+		head = temp1;
+		LL *temp2 = new LL("Dan", head);
+		head = temp2;
+		LL *temp3 = new LL("Jerry", head);
+		head = temp3;
+	} else if (monster.get_speed() >= 6) {
+		LL *temp1 = new LL("Dan", head);
+		head = temp1;
+		LL *temp2 = new LL("Jerry", head);
+		head = temp2;
+		LL *temp3 = new LL(monster.get_name(), head);
+		head = temp3;
+	} else {
+		LL *temp1 = new LL("Dan", head);
+		head = temp1;
+		LL *temp2 = new LL(monster.get_name(), head);
+		head = temp2;
+		LL *temp3 = new LL("Jerry", head);
+		head = temp3;
+	}
+	head->next->next->next = head; // make it circular
+	LL *temp = head;
+	//while (monster.is_dead() == false && party->party_alive() == true) {}
+		if (temp->char_name == "Dan" && party->is_dead(0) == false) {
+			attack_value = 1 + rand() % 5;
+			monster.adjust_health(attack_value);
+			//mvprintw(turn_count,0,"Dan attacked %i, for %i damage.",monster.get_name(),attack_value);
+		} else if (temp->char_name == "Jerry" && party->is_dead(1) == false) {
+			attack_value = 1 + rand() % 3;
+			monster.adjust_health(attack_value);
+			//mvprintw(turn_count,0,"Jerry attacked %i for %i damage.",monster.get_name(),attack_value);
+		} else {
+			attack_value = 1 + rand() % 4;
+			if (party->is_dead(0) == false) target = 0;
+			else target = 1;
+			party->adjust_health(target, attack_value);
+			//mvprintw(turn_count,0,"%i attacked %i for %i damage.",monster.get_name(),party->get_name(target),attack_value);
+		}
+		turn_count++;
+		usleep(10000);
+	//}
+	if (monster.is_dead() == true && party->party_alive() == true) party->monster_slain();
 }
 
 int main() {
@@ -67,6 +118,10 @@ int main() {
 
 		}
 		else if (map.check_tile(x, y) == 'M') start_battle(&party);
+		if (party.party_alive() == false) {
+			cout << "GAME OVER";
+			break;
+		}
 		
 		map.move_party(x, y, &party);		
 
@@ -76,7 +131,7 @@ int main() {
 		mvprintw(0,12,"TREASURE: %i/%i",party.get_wallet(),map.treasure_count());
 		mvprintw(1,12,"KILLS: %i",party.get_kills());
 		mvprintw(2,12,"DAN'S HEALTH: %i/%i",party.get_health(0),party.get_mhealth(0));
-		mvprintw(3,12,"JERRY'S HEALTH: %i/%i",party.get_health(1),party.get_mhealth(0));
+		mvprintw(3,12,"JERRY'S HEALTH: %i/%i",party.get_health(1),party.get_mhealth(1));
 		refresh();
 		usleep(5000);
 	}

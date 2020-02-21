@@ -59,7 +59,7 @@ string Monster::get_name() {
 }
 
 void Monster::adjust_health(int x) {
-	health += x;
+	health -= x;
 	if (health <= 0) {
 		health = 0;
 		dead = true;

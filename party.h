@@ -23,11 +23,13 @@ class Party {
 		int get_speed(int x);
 		bool is_dead(int x);
 		bool party_alive();
+		string get_name(int x);
 
 		// Mutators:
 		void set_location(int x, int y);
 		void grab_treasure();
 		void monster_slain();
+		void adjust_health(int x, int y);
 };
 
 // Implementations:
@@ -79,6 +81,10 @@ bool Party::party_alive() {
 	else return true;
 }
 
+string Party::get_name(int x) {
+	return heroes.at(x).get_name(); 
+}
+
 void Party::set_location(int x, int y) {
 	location_x = x;
 	location_y = y;
@@ -90,4 +96,8 @@ void Party::grab_treasure() {
 
 void Party::monster_slain() {
 	kills++;
+}
+
+void Party::adjust_health(int x, int y) {
+	heroes.at(x).adjust_health(y);
 }

@@ -28,7 +28,7 @@ Hero::Hero(int set_speed, int set_health, string set_name) {
 	speed = set_speed;
 	default_speed = set_speed;
 	health = set_health;
-	max_health = set_health;
+	max_health = health;
 	h_name = set_name;
 	dead = false;
 }
@@ -58,7 +58,7 @@ string Hero::get_name() {
 }
 
 void Hero::adjust_health(int x) {
-	health += x;
+	health -= x;
 	if (health <= 0) {
 		health = 0;
 		dead = true;
