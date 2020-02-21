@@ -120,6 +120,16 @@ class Map {
 		party->set_location(x, y);
 		map.at(party->get_location_y()).at(party->get_location_x()) = HERO;
 	}
+	string save_map(){
+        string map_save;
+        for(int y = 0; y < 100 ; y++) {
+            for (int x = 0; x < 100 ; x++) {
+                map_save += map.at(y).at(x);
+
+            }
+        }
+        return map_save;
+    }
 	char check_tile(int x, int y) {
 		return map.at(y).at(x);
 	}
